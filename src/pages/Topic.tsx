@@ -20,7 +20,7 @@ export function Topic() {
   const [isEditingDescription, setIsEditingDescription] = useState(false)
   const [newDescription, setNewDescription] = useState('')
 
-  const { database, useLiveQuery } = useFireproof('gallery')
+  const { database, useLiveQuery } = useFireproof('topics')
   const { id } = useParams()
 
   const topics = useLiveQuery('_id', { key: id })

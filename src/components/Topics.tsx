@@ -5,7 +5,7 @@ import { useState } from 'react'
 import { AutoFocusInput } from './AutoFocusInput'
 
 export function Topics() {
-  const { database, useLiveQuery } = useFireproof('gallery')
+  const { database, useLiveQuery } = useFireproof('topics')
   const [isCreating, setIsCreating] = useState(false)
   const [topicName, setTopicName] = useState('')
 

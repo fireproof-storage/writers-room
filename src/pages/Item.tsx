@@ -8,7 +8,7 @@ import { TopicDoc } from './Topic'
 
 export function Item() {
   const { id } = useParams<{ id: string }>()
-  const { database } = useFireproof('gallery')
+  const { database } = useFireproof('topics')
   const [item, setItem] = useState<ItemDoc | null>(null)
 
   useEffect(() => {

@@ -16,7 +16,7 @@ export type ItemDoc = {
 }
 
 export function Items({ topicId }: { topicId: string }) {
-  const { database, useLiveQuery } = useFireproof('gallery')
+  const { database, useLiveQuery } = useFireproof('topics')
   const [isCreating, setIsCreating] = useState(false)
   const [itemName, setItemName] = useState('')
 

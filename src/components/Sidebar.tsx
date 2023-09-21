@@ -5,7 +5,7 @@ import { Topics } from './Topics'
 
 export function Sidebar() {
   const { database } = useFireproof('smart-book')
-  const [, setAuthorized] = useState(false)
+  const [authorized, setAuthorized] = useState(false)
   const cx = database.connect('gallery')
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export function Sidebar() {
 
   return (
     <div className="w-1/4 p-4 dark:bg-gray-900 bg-slate-200">
-      <Login onLogin={onLogin} />
+      {!authorized && <Login onLogin={onLogin} />}
       <Topics />
     </div>
   )
