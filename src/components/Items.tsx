@@ -2,10 +2,12 @@ import { useFireproof } from 'use-fireproof'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { AutoFocusInput } from './AutoFocusInput'
+import { TopicDoc } from '../pages/Topic'
 
 export type ItemDoc = {
   _id?: string
   topicId: string
+  topic?: TopicDoc
   name: string
   description?: string
   created: number

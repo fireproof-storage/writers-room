@@ -1,27 +1,19 @@
-# React + TypeScript + Vite
+# Fireproof + React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This template provides a ready-to-go setup to start building useful apps with Fireproof, React, and Vite.
 
-Currently, two official plugins are available:
+Develop with `npm start` and build with `npm run build`. It should be able to deploy to any static host.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Next Steps
 
-## Expanding the ESLint configuration
+Assuming you want to build a real app from this, the first thing you want to do it think about how to map your app onto the data flow of this scaffold.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+There are three main logical entities in this scaffold:
 
-- Configure the top-level `parserOptions` property like this:
+- The database -- each database is its own world, and is the unit of collaboration. You can have multiple databases in a single app, but queries run in one database. Collaborative apps will frequently spend a fair amount of energy ensuring each user has the correct databases on each device. Once the user is in the database, the core experience begins.
+- The topics -- this app is centered around topics. They could be saved searches for online purchases, wiki pages, todo lists, game boards, or whatever. Once you are collaborating with a team, you can have as many topics as you want within the collaborative database.
+- The items -- this app also has generic items inside the topics. These can reppresent todo items, wiki paragraphs, game moves, etc. They are the core of the app, and are the things that users will be interacting with.
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+Feel free to go beyond this rudimentary data model, or to simplify it if you don't need all three layers. The sharing management is the part that will be the most in common with other apps, so you should probably share your changes here with the community.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Edit routes in `App.tsx`, the copy in `Home.tsx`, and the sidebar in `Sidebar.tsx`. This starter kit ships with a `Login` component and a `Topics` component with `Items`, which you can rename and use as a starting point for your own app's data.
