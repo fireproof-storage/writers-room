@@ -4,8 +4,6 @@ This template provides a ready-to-go setup to start building useful apps with Fi
 
 Develop with `npm start` and build with `npm run build`. It should be able to deploy to any static host.
 
-<img width="940" alt="Screen Shot 2023-09-21 at 2 44 00 PM" src="https://github.com/jchris/smart-book-beta/assets/253/bb4e22d4-62f8-4a4c-b288-66c98d3c03be">
-
 ## Next Steps
 
 Assuming you want to build a real app from this, the first thing you want to do it think about how to map your app onto the data flow of this scaffold.
