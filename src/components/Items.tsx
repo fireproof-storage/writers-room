@@ -26,7 +26,7 @@ export function Items({ topicId }: { topicId: string }) {
         emit(doc.topicId)
       }
     },
-    { descending: false }
+    { descending: false, key: topicId }
   ).docs as ItemDoc[]
 
   const handleCreateClick = async () => {
