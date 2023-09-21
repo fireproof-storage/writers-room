@@ -72,14 +72,14 @@ export function Items({ topicId }: { topicId: string }) {
           )}
         </li>
         {items.map(doc => (
-          <li key={doc._id} className="p-2 text-gray-500">
+          <li key={doc._id} className="p-2 text-gray-500 flex justify-between items-center">
             <Link
               to={`/item/${doc._id}`}
-              className="block hover:bg-gray-100dark: hover:bg-gray-800 rounded px-2"
+              className="block hover:bg-gray-100 dark:hover:bg-gray-800 rounded px-2 flex-grow"
             >
-              <span className="block font-bold">{doc.name}</span>
-              <span className="block text-xs pb-2">{new Date(doc.updated).toLocaleString()}</span>
+              <span className="font-bold">{doc.name}</span>
             </Link>
+            <span className="text-xs pb-2">{new Date(doc.updated).toLocaleString()}</span>
           </li>
         ))}
       </ul>
