@@ -1,4 +1,4 @@
-# Fireproof + React + TypeScript + Vite
+# Starter Kit: Fireproof + React + TypeScript + Vite
 
 This template provides a ready-to-go setup to start building useful apps with Fireproof, React, and Vite.
 
