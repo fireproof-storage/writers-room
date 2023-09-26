@@ -4,7 +4,7 @@ This template provides a ready-to-go setup to start building useful apps with Fi
 
 Develop with `npm start` and build with `npm run build`. It should be able to deploy to any static host.
 
-<img width="1015" alt="Screen Shot 2023-09-25 at 6 33 50 PM" src="https://github.com/fireproof-storage/fireproof-starter-kit-react-ts-vite/assets/253/a5595d5c-a097-41e4-bb42-7bf535d3df87">
+<img width="500" alt="Screen Shot 2023-09-25 at 6 33 50 PM" src="https://github.com/fireproof-storage/fireproof-starter-kit-react-ts-vite/assets/253/a5595d5c-a097-41e4-bb42-7bf535d3df87">
 
 ## Next Steps
 
