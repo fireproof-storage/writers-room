@@ -3,7 +3,6 @@
 This template provides a ready-to-go setup to start building useful apps with Fireproof, React, and Vite.
 
 Develop with `npm start` and build with `npm run build`. It should be able to deploy to any static host.
-
 ## Next Steps
 
 Assuming you want to build a real app from this, the first thing you want to do it think about how to map your app onto the data flow of this scaffold.
