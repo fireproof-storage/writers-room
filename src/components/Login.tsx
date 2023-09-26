@@ -1,8 +1,19 @@
 import { useState } from 'react'
 
-export function Login({ onLogin }: { onLogin: (email: `${string}@${string}`) => void }) {
+export function Login({
+  onLogin,
+  placeholder,
+  authorized,
+  accountClicked,
+}: {
+  authorized: boolean
+  placeholder?: string,
+  accountClicked: () => void,
+  onLogin: (email: `${string}@${string}`) => void
+}) {
   const [email, setEmail] = useState<`${string}@${string}`>()
   const [didSubmit, setDidSubmit] = useState(false)
+  
   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setDidSubmit(true)
@@ -13,7 +24,14 @@ export function Login({ onLogin }: { onLogin: (email: `${string}@${string}`) => 
   }
   return (
     <div className="bg-slate-500 rounded p-2">
-      {didSubmit ? (
+      {authorized ? (
+        <button className="text-xs"
+        title="Open this database in the Fireproof dashboard"
+        onClick={accountClicked}
+        >
+          Logged in as <span className="italic">{placeholder}</span>
+        </button>
+      ) : didSubmit ? (
         <p className="text-xs">
           Please check your email at <span className="italic">{email}</span> for a verification
           message from web3.storage. If you are logging into an existing account, please log in on
@@ -23,13 +41,13 @@ export function Login({ onLogin }: { onLogin: (email: `${string}@${string}`) => 
         </p>
       ) : (
         <>
-          <h2 className="text-slate-900 px-1 mb-1">Login to add collaborators.</h2>
+          <h2 className="text-slate-900 px-1">Login to upload images:</h2>
           <form onSubmit={onSubmit}>
             <input
               className="p-1 mt-1 w-full text-slate-900"
               type="text"
               value={email}
-              placeholder="email@example.com"
+              placeholder={placeholder || 'email@example.com'}
               onChange={onChange}
             />
             <button

@@ -4,8 +4,9 @@ import { Login } from './Login'
 import { Topics } from './Topics'
 
 export function Sidebar() {
-  const { database } = useFireproof('smart-book')
+  const { database } = useFireproof('topics')
   const [authorized, setAuthorized] = useState(false)
+  const [userEmail, setUserEmail] = useState(localStorage.getItem('user-email') || '')
   const cx = database.connect('gallery')
 
   useEffect(() => {
@@ -17,12 +18,19 @@ export function Sidebar() {
   const onLogin = (email: `${string}@${string}`) => {
     cx.authorize(email).then(() => {
       setAuthorized(true)
+      localStorage.setItem('user-email', email)
+      setUserEmail(email)
     })
   }
 
   return (
     <div className="w-1/4 p-4 dark:bg-gray-900 bg-slate-200">
-      {!authorized && <Login onLogin={onLogin} />}
+      <Login
+        onLogin={onLogin}
+        accountClicked={() => database.openDashboard()}
+        placeholder={userEmail}
+        authorized={authorized}
+      />
       <Topics />
     </div>
   )
