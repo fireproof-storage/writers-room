@@ -41,7 +41,7 @@ export function Login({
         </p>
       ) : (
         <>
-          <h2 className="text-slate-900 px-1">Login to upload images:</h2>
+          <h2 className="text-slate-900 px-1">Login to save:</h2>
           <form onSubmit={onSubmit}>
             <input
               className="p-1 mt-1 w-full text-slate-900"
