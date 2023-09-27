@@ -19,7 +19,6 @@ export type TopicDoc = {
 export function Topic() {
   // const navigate = useNavigate() // Initialize useHistory hook
   const [isEditingDescription, setIsEditingDescription] = useState(false)
-  const [newDescription, setNewDescription] = useState('')
 
   const { database, useLiveQuery } = useFireproof('topics')
   const { id } = useParams()
