@@ -8,6 +8,7 @@ type InlineEditorProps = {
   setIsEditing: (value: boolean) => void
   field: string
   label?: string
+  children?: React.ReactNode
 }
 
 export const InlineEditor: React.FC<InlineEditorProps> = ({
@@ -16,7 +17,8 @@ export const InlineEditor: React.FC<InlineEditorProps> = ({
   isEditing,
   setIsEditing,
   field,
-  label
+  label,
+  children
 }) => {
   const [newValue, setNewValue] = useState(topic?.[field]?.toString() || '')
 
@@ -45,7 +47,7 @@ export const InlineEditor: React.FC<InlineEditorProps> = ({
           onChange={e => setNewValue(e.target.value)}
         />
         <button className="w-8 h-8" type="submit">
-          ✔️ 
+          ✔️
         </button>
         <button className="w-8 h-8" type="reset" onClick={() => setIsEditing(false)}>
           ✖️
@@ -58,9 +60,8 @@ export const InlineEditor: React.FC<InlineEditorProps> = ({
         setNewValue(topic?.[field]?.toString() || '')
         setIsEditing(true)
       }}
-      className="prose prose-slate dark:prose-invert"
     >
-      <p>{topic?.[field]?.toString()}</p>
+      {children ? children : <p className="prose prose-slate dark:prose-invert">{topic?.[field]?.toString()}</p>}
     </div>
   )
 }
