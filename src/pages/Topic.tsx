@@ -5,7 +5,7 @@ import {
 } from 'react-router-dom'
 import { useFireproof } from 'use-fireproof'
 import { Items } from '../components/Items'
-import { DescriptionEditor } from '../components/DescriptionEditor'
+import { InlineEditor } from '../components/InlineEditor'
 
 export type TopicDoc = {
   _id?: string
@@ -18,7 +18,8 @@ export type TopicDoc = {
 
 export function Topic() {
   // const navigate = useNavigate() // Initialize useHistory hook
-  const [isEditingDescription, setIsEditingDescription] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+  const [isEditingTitle, setIsEditingTitle] = useState(false)
 
   const { database, useLiveQuery } = useFireproof('topics')
   const { id } = useParams()
@@ -29,7 +30,19 @@ export function Topic() {
   return (
     <div>
       <div className="flex justify-between items-center mb-2">
-        <h1 className="text-2xl font-bold">{topic?.title}</h1>
+        {isEditingTitle ? (
+          <InlineEditor
+            field="title"
+            topic={topic}
+            database={database}
+            isEditing={isEditingTitle}
+            setIsEditing={setIsEditingTitle}
+          />
+        ) : (
+          <h1 className="text-2xl font-bold" onClick={() => setIsEditingTitle(true)}>
+            {topic?.title}
+          </h1>
+        )}
       </div>
       <div className="mb-2">
         <span className="text-sm text-gray-500">
@@ -39,12 +52,17 @@ export function Topic() {
           Updated: {new Date(topic?.updated).toLocaleString()}
         </span>
       </div>
-      <DescriptionEditor
+      <InlineEditor
+        field="description"
+        label="Edit Description: "
         topic={topic}
         database={database}
-        isEditingDescription={isEditingDescription}
-        setIsEditingDescription={setIsEditingDescription}
+        isEditing={isEditing}
+        setIsEditing={setIsEditing}
       />
+
+
+
       <Items topicId={id!} />
     </div>
   )
