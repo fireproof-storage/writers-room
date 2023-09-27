@@ -65,10 +65,10 @@ export function Topics() {
           <li key={doc._id} className="p-2 text-gray-500">
             <Link
               to={`/topic/${doc._id}`}
-              className="block text-xs hover:bg-gray-100dark: hover:bg-gray-800 rounded px-2"
+              className="block text-xs hover:bg-gray-100 dark:hover:bg-gray-800 rounded p-2"
             >
               <span className="block font-bold">{doc.title}</span>
-              <span className="block pb-2">{new Date(doc.updated).toLocaleString()}</span>
+              <span className="block">{new Date(doc.updated).toLocaleString()}</span>
             </Link>
           </li>
         ))}
