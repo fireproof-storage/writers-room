@@ -5,11 +5,13 @@ import { Link, useParams } from 'react-router-dom'
 import { useFireproof } from 'use-fireproof'
 import { ItemDoc } from '../components/Items'
 import { TopicDoc } from './Topic'
+import { DescriptionEditor } from '../components/DescriptionEditor'
 
 export function Item() {
   const { id } = useParams<{ id: string }>()
   const { database } = useFireproof('topics')
   const [item, setItem] = useState<ItemDoc | null>(null)
+  const [isEditingDescription, setIsEditingDescription] = useState(false)
 
   useEffect(() => {
     const fetchItem = async () => {
@@ -32,7 +34,12 @@ const topicId = item.topicId
     <div className="bg-blue-500 text-white p-6 rounded-lg shadow-lg">
       <Link to={`/topic/${topicId}`} className="text-white">← back to {item.topic?.title}</Link>
       <h2 className="text-4xl font-bold mb-2">{item.name}</h2>
-      <p className="text-lg mb-2">{item.description}</p>
+      <DescriptionEditor
+        topic={item}
+        database={database}
+        isEditingDescription={isEditingDescription}
+        setIsEditingDescription={setIsEditingDescription}
+      />
       <p className="text-sm">Created: {new Date(item.created).toLocaleString()}</p>
       <p className="text-sm">Updated: {new Date(item.updated).toLocaleString()}</p>
     </div>

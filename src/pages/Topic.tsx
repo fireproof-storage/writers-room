@@ -1,10 +1,11 @@
-import {  useState } from 'react'
+import { useState } from 'react'
 import {
   useParams
   // , useNavigate
 } from 'react-router-dom'
 import { useFireproof } from 'use-fireproof'
 import { Items } from '../components/Items'
+import { DescriptionEditor } from '../components/DescriptionEditor'
 
 export type TopicDoc = {
   _id?: string
@@ -39,44 +40,12 @@ export function Topic() {
           Updated: {new Date(topic?.updated).toLocaleString()}
         </span>
       </div>
-      {isEditingDescription || !topic?.description ? (
-        <form
-          onSubmit={e => {
-            e.preventDefault()
-            topic.description = newDescription
-            topic.updated = Date.now()
-            database.put(topic)
-            setIsEditingDescription(false)
-            setNewDescription('')
-          }}
-        >
-          <div className="w-full flex p-2">
-            <label className="block text-sm font-bold mb-2 pr-2" htmlFor="description">
-              Edit description:
-            </label>
-            <input
-              id="description"
-              className="border-2 border-gray-300 p-1 mr-2 text-sm text-black w-full rounded-md focus:outline-none focus:border-blue-500"
-              type="text"
-              value={newDescription}
-              onChange={e => setNewDescription(e.target.value)}
-            />
-            <button className="w-8 h-8" type="submit">
-              ✔️
-            </button>
-          </div>
-        </form>
-      ) : (
-        <div
-          onClick={() => {
-            setNewDescription(topic?.description?.toString() || '')
-            setIsEditingDescription(true)
-          }}
-          className="prose prose-slate dark:prose-invert"
-        >
-          <p>{topic?.description}</p>
-        </div>
-      )}
+      <DescriptionEditor
+        topic={topic}
+        database={database}
+        isEditingDescription={isEditingDescription}
+        setIsEditingDescription={setIsEditingDescription}
+      />
       <Items topicId={id!} />
     </div>
   )
