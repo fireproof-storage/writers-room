@@ -19,3 +19,13 @@ There are three main logical entities in this scaffold:
 Feel free to go beyond this rudimentary data model, or to simplify it if you don't need all three layers. The sharing management is the part that will be the most in common with other apps, so you should probably share your changes here with the community.
 
 Edit routes in `App.tsx`, the copy in `Home.tsx`, and the sidebar in `Sidebar.tsx`. This starter kit ships with a `Login` component and a `Topics` component with `Items`, which you can rename and use as a starting point for your own app's data.
+
+## Examples you can build with it
+
+A [poll manager](https://astounding-peony-4ad9d6.netlify.app/survey/018ade79-e71c-7a6a-8784-3bc1ce10df0a) for [PartyKit's polls sketch](https://github.com/partykit/sketch-polls):
+
+![polls](https://github.com/fireproof-storage/react-typescript-starter-kit/assets/253/dc25f023-4004-4e34-93fc-b082cfb8561d)
+
+A [photo gallery with publishing.](https://public-media.fireproof.storage) ([GitHub](https://github.com/fireproof-storage/public-media-gallery))
+
+![gallery](https://github.com/fireproof-storage/react-typescript-starter-kit/assets/253/e6c79f3c-69cd-4e9c-9db8-ddd73b8c2d1e)
