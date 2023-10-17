@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useFireproof } from 'use-fireproof'
+import { connect } from '@fireproof/ipfs'
 import { Login } from './Login'
 import { Topics } from './Topics'
 
@@ -7,7 +8,7 @@ export function Sidebar() {
   const { database } = useFireproof('topics')
   const [authorized, setAuthorized] = useState(false)
   const [userEmail, setUserEmail] = useState(localStorage.getItem('user-email') || '')
-  const cx = database.connect('gallery')
+  const cx = connect.ipfs(database)
 
   useEffect(() => {
     cx.ready.then(() => {
