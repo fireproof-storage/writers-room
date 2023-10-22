@@ -33,7 +33,7 @@ export function Topic() {
         {isEditingTitle ? (
           <InlineEditor
             field="title"
-            topic={topic}
+            document={topic}
             database={database}
             isEditing={isEditingTitle}
             setIsEditing={setIsEditingTitle}
@@ -55,7 +55,7 @@ export function Topic() {
       <InlineEditor
         field="description"
         label="Edit Description: "
-        topic={topic}
+        document={topic}
         database={database}
         isEditing={isEditing}
         setIsEditing={setIsEditing}

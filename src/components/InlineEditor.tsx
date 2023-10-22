@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import type { Database, DocFragment } from 'use-fireproof'
 
 type InlineEditorProps = {
-  topic: { [key: string]: DocFragment; updated: number }
+  document: { [key: string]: DocFragment; updated: number }
   database: Database
   isEditing: boolean
   setIsEditing: (value: boolean) => void
@@ -12,7 +12,7 @@ type InlineEditorProps = {
 }
 
 export const InlineEditor: React.FC<InlineEditorProps> = ({
-  topic,
+  document,
   database,
   isEditing,
   setIsEditing,
@@ -20,15 +20,15 @@ export const InlineEditor: React.FC<InlineEditorProps> = ({
   label,
   children
 }) => {
-  const [newValue, setNewValue] = useState(topic?.[field]?.toString() || '')
+  const [newValue, setNewValue] = useState(document?.[field]?.toString() || '')
 
-  return isEditing || !topic?.[field] ? (
+  return isEditing || !document?.[field] ? (
     <form
       onSubmit={e => {
         e.preventDefault()
-        topic[field] = newValue
-        topic.updated = Date.now()
-        database.put(topic)
+        document[field] = newValue
+        document.updated = Date.now()
+        database.put(document)
         setIsEditing(false)
         setNewValue('')
       }}
@@ -57,11 +57,18 @@ export const InlineEditor: React.FC<InlineEditorProps> = ({
   ) : (
     <div
       onClick={() => {
-        setNewValue(topic?.[field]?.toString() || '')
+        setNewValue(document?.[field]?.toString() || '')
         setIsEditing(true)
       }}
     >
-      {children ? children : <p className="prose prose-slate dark:prose-invert">{topic?.[field]?.toString()}</p>}
+      {children ? (
+        children
+      ) : (
+        <>
+          <span className="font-bold">{label}</span>
+          <p className="prose prose-slate dark:prose-invert">{document?.[field]?.toString()}</p>
+        </>
+      )}
     </div>
   )
 }

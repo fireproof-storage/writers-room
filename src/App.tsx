@@ -6,6 +6,7 @@ import { Home } from './pages/Home'
 import { Topic } from './pages/Topic'
 import { Sidebar } from './components/Sidebar'
 import { Item } from './pages/Item'
+import { Character } from './pages/Character'
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -18,6 +19,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 function App() {
   const routes = [
+    { path: '/character/:id', component: Character },
     { path: '/topic/:id', component: Topic },
     { path: '/item/:id', component: Item },
     { path: '/', component: Home }

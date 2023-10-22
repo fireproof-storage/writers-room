@@ -3,6 +3,7 @@ import { useFireproof } from 'use-fireproof'
 import { connect } from '@fireproof/ipfs'
 import { Login } from './Login'
 import { Topics } from './Topics'
+import { Characters } from './Characters'
 
 export function Sidebar() {
   const { database } = useFireproof('topics')
@@ -32,7 +33,10 @@ export function Sidebar() {
         placeholder={userEmail}
         authorized={authorized}
       />
+      <Characters />
       <Topics />
+      
+
     </div>
   )
 }
