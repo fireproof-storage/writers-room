@@ -2,12 +2,12 @@ import { useFireproof } from 'use-fireproof'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { AutoFocusInput } from './AutoFocusInput'
-import { TopicDoc } from '../pages/Topic'
+import { StorylineDoc } from '../pages/Storyline'
 
 export type ItemDoc = {
   _id?: string
-  topicId: string
-  topic?: TopicDoc
+  storylineId: string
+  topic?: StorylineDoc
   name: string
   description?: string
   created: number
@@ -15,7 +15,7 @@ export type ItemDoc = {
   type: 'item'
 }
 
-export function Items({ topicId }: { topicId: string }) {
+export function Items({ storylineId }: { storylineId: string }) {
   const { database, useLiveQuery } = useFireproof('topics')
   const [isCreating, setIsCreating] = useState(false)
   const [itemName, setItemName] = useState('')
@@ -23,16 +23,16 @@ export function Items({ topicId }: { topicId: string }) {
   const items = useLiveQuery(
     (doc, emit) => {
       if (doc.type === 'item') {
-        emit(doc.topicId)
+        emit(doc.storylineId)
       }
     },
-    { descending: false, key: topicId }
+    { descending: false, key: storylineId }
   ).docs as ItemDoc[]
 
   const handleCreateClick = async () => {
     const topicDoc: ItemDoc = {
       type: 'item',
-      topicId,
+      storylineId,
       name: itemName,
       created: Date.now(),
       updated: Date.now()

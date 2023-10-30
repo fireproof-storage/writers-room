@@ -18,7 +18,7 @@ export function Home() {
       <p>
         Edit routes in <code>App.tsx</code>, this copy in <code>Home.tsx</code>, and the sidebar in{' '}
         <code>Sidebar.tsx</code>. This starter kit ships with a Login component (
-        <code>components/Login.tsx</code>) and Topics (<code>components/Topics.tsx</code>) with
+        <code>components/Login.tsx</code>) and Storylines (<code>components/Storylines.tsx</code>) with
         Items (<code>components/Items.tsx</code>), which you can rename and use as a starting point
         for your own app's data.
       </p>

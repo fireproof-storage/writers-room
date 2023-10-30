@@ -52,7 +52,7 @@ There are three main logical entities in this scaffold:
 
 Feel free to go beyond this rudimentary data model, or to simplify it if you don't need all three layers. The sharing management is the part that will be the most in common with other apps, so you should probably share your changes here with the community.
 
-Edit routes in `App.tsx`, the copy in `Home.tsx`, and the sidebar in `Sidebar.tsx`. This starter kit ships with a `Login` component and a `Topics` component with `Items`, which you can rename and use as a starting point for your own app's data.
+Edit routes in `App.tsx`, the copy in `Home.tsx`, and the sidebar in `Sidebar.tsx`. This starter kit ships with a `Login` component and a `Storylines` component with `Items`, which you can rename and use as a starting point for your own app's data.
 
 ## Examples you can build with it
 

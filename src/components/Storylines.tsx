@@ -1,26 +1,26 @@
 import { useFireproof } from 'use-fireproof'
 import { Link } from 'react-router-dom'
-import { TopicDoc } from '../pages/Topic'
+import { StorylineDoc } from '../pages/Storyline'
 import { useState } from 'react'
 import { AutoFocusInput } from './AutoFocusInput'
 
-export function Topics() {
+export function Storylines() {
   const { database, useLiveQuery } = useFireproof('topics')
   const [isCreating, setIsCreating] = useState(false)
   const [topicName, setTopicName] = useState('')
 
   const topics = useLiveQuery(
     (doc, emit) => {
-      if (doc.type === 'topic') {
+      if (doc.type === 'storyline') {
         emit(doc.title)
       }
     },
     { descending: false }
-  ).docs as TopicDoc[]
+  ).docs as StorylineDoc[]
 
   const handleCreateClick = async () => {
-    const topicDoc: TopicDoc = {
-      type: 'topic',
+    const topicDoc: StorylineDoc = {
+      type: 'storyline',
       title: topicName,
       created: Date.now(),
       updated: Date.now()
@@ -31,7 +31,7 @@ export function Topics() {
   }
   return (
     <div className="py-2">
-      <h2 className="text-2xl text-bold">Topics</h2>
+      <h2 className="text-2xl text-bold">Storylines</h2>
       <ul className="list-inside list-none">
         <li key="add" className="p-2">
           {isCreating ? (
@@ -56,7 +56,7 @@ export function Topics() {
             <>
               <span className="inline-block text-slate-700">+</span>
               <span onClick={() => setIsCreating(true)} className="inline-block ml-2">
-                Create new topic
+                Create new storyline
               </span>
             </>
           )}

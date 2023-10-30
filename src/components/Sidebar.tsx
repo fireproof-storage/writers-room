@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useFireproof } from 'use-fireproof'
 import { connect } from '@fireproof/ipfs'
 import { Login } from './Login'
-import { Topics } from './Topics'
+import { Storylines } from './Storylines'
 import { Characters } from './Characters'
 import { APIKey } from './APIKey'
 
@@ -50,7 +50,7 @@ export function Sidebar() {
       />
 
       <Characters />
-      <Topics />
+      <Storylines />
       
 
     </div>

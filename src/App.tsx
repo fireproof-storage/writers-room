@@ -3,7 +3,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Header } from './components/Header'
 import { Home } from './pages/Home'
-import { Topic } from './pages/Topic'
+import { Storyline } from './pages/Storyline'
 import { Sidebar } from './components/Sidebar'
 import { Item } from './pages/Item'
 import { Character } from './pages/Character'
@@ -20,7 +20,7 @@ function Layout({ children }: { children: React.ReactNode }) {
 function App() {
   const routes = [
     { path: '/character/:id', component: Character },
-    { path: '/topic/:id', component: Topic },
+    { path: '/topic/:id', component: Storyline },
     { path: '/item/:id', component: Item },
     { path: '/', component: Home }
   ]

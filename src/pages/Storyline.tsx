@@ -7,16 +7,16 @@ import { useFireproof } from 'use-fireproof'
 import { Items } from '../components/Items'
 import { InlineEditor } from '../components/InlineEditor'
 
-export type TopicDoc = {
+export type StorylineDoc = {
   _id?: string
   title: string
   description?: string
   created: number
   updated: number
-  type: 'topic'
+  type: 'storyline'
 }
 
-export function Topic() {
+export function Storyline() {
   // const navigate = useNavigate() // Initialize useHistory hook
   const [isEditing, setIsEditing] = useState(false)
   const [isEditingTitle, setIsEditingTitle] = useState(false)
@@ -25,7 +25,7 @@ export function Topic() {
   const { id } = useParams()
 
   const topics = useLiveQuery('_id', { key: id })
-  const [topic] = topics.docs as TopicDoc[]
+  const [topic] = topics.docs as StorylineDoc[]
 
   return (
     <div>
@@ -63,7 +63,7 @@ export function Topic() {
 
 
 
-      <Items topicId={id!} />
+      <Items storylineId={id!} />
     </div>
   )
 }

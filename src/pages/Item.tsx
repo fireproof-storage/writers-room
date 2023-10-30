@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useFireproof } from 'use-fireproof'
 import { ItemDoc } from '../components/Items'
-import { TopicDoc } from './Topic'
+import { StorylineDoc } from './Storyline'
 import { InlineEditor } from '../components/InlineEditor'
 
 export function Item() {
@@ -17,7 +17,7 @@ export function Item() {
   useEffect(() => {
     const fetchItem = async () => {
       const doc = (await database.get(id!)) as ItemDoc
-      doc.topic = (await database.get(doc.topicId as string)) as TopicDoc
+      doc.topic = (await database.get(doc.storylineId as string)) as StorylineDoc
       if (doc.type === 'item') {
         setItem(doc)
       }
@@ -29,11 +29,11 @@ export function Item() {
     return <div>Loading...</div>
   }
 
-  const topicId = item.topicId
+  const storylineId = item.storylineId
 
   return (
     <div className="bg-blue-500 text-white p-6 rounded-lg shadow-lg">
-      <Link to={`/topic/${topicId}`} className="text-white">
+      <Link to={`/topic/${storylineId}`} className="text-white">
         ← back to {item.topic?.title}
       </Link>
       <InlineEditor
