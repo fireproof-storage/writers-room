@@ -1,3 +1,37 @@
+# Writer's Room
+
+Unleash Your Inner Storyteller with Graphic Novel Builder!
+
+Create Your Unique Style
+
+Choose from a variety of art styles that transform your novel's look.
+Switch effortlessly between styles to preview different aesthetics.
+Craft Captivating Characters
+
+Name your characters and weave intricate backstories.
+Generate lifelike images for faces and full bodies.
+Elevate your favorites while the rest go into the 'dogpile'.
+Master Your Epic Storyline
+
+Start with an engaging prompt and outline your acts.
+Experiment by generating new acts and scenes without losing your current work.
+Drag-and-drop functionality lets you arrange acts seamlessly.
+Act-by-Act Control
+
+Adjust the number of scenes with a simple slider.
+Promote or replace lines to refine your story.
+Panel-Level Precision
+
+Get granular by editing individual panels.
+See your panel in context with adjacent panels to ensure seamless flow.
+Routes to Adventure
+
+Configure your API, manage characters, and control storylines through intuitive routes.
+First Steps in Your Saga
+
+Easily generate initial character images and set up your universe.
+Are you ready to script your legend?
+
 # Starter Kit: Fireproof + React + TypeScript + Vite
 
 This template provides a ready-to-go setup to start building useful apps with Fireproof, React, and Vite.

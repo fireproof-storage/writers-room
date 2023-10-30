@@ -4,6 +4,7 @@ import { connect } from '@fireproof/ipfs'
 import { Login } from './Login'
 import { Topics } from './Topics'
 import { Characters } from './Characters'
+import { APIKey } from './APIKey'
 
 export function Sidebar() {
   const { database } = useFireproof('topics')
@@ -25,6 +26,14 @@ export function Sidebar() {
     })
   }
 
+  const onKeySet = (key: string) => {
+    localStorage.setItem('api-key', key)
+  }
+
+  const apiKeyPresent = Boolean(localStorage.getItem('api-key'))
+
+  const placeholder = (localStorage.getItem('api-key') || '').substring(0, 10) + '...'
+
   return (
     <div className="w-1/4 p-4 dark:bg-gray-900 bg-slate-200">
       <Login
@@ -33,6 +42,13 @@ export function Sidebar() {
         placeholder={userEmail}
         authorized={authorized}
       />
+      
+      <APIKey
+        onKeySet={onKeySet}
+        placeholder={placeholder}
+        keyPresent={apiKeyPresent}
+      />
+
       <Characters />
       <Topics />
       

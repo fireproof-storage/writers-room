@@ -2,6 +2,9 @@ import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useFireproof } from 'use-fireproof'
 import { InlineEditor } from '../components/InlineEditor'
+import { client } from '../prompts'
+
+const apiKey = localStorage.getItem('api-key')
 
 export type CharacterDoc = {
   _id?: string
@@ -12,6 +15,9 @@ export type CharacterDoc = {
   created: number
   updated: number
   type: 'character'
+  imagePrompt?: string
+  profileImgURLs?: string[]
+  faceImgURLs?: string[]
 }
 
 export function Character() {
@@ -25,8 +31,18 @@ export function Character() {
   const characters = useLiveQuery('_id', { key: id }).docs as CharacterDoc[]
   const [character] = characters
 
-  const generateImages = async () => {
+  const generateImagePrompt = async () => {
+    if (!apiKey) throw new Error('No API key set')
+    const imagePrompt = await client(apiKey).detailedCharacterVisualDescription(character)
+    await database.put({ ...character, imagePrompt })
+  }
 
+  const generateImages = async () => {
+    if (!apiKey) throw new Error('No API key set')
+    const imageUrls = (await client(apiKey).generateProfileImage(character)) as string[]
+    console.log(imageUrls)
+    const faceImgs = (await client(apiKey).generateFaceImages(character)) as string[]
+    await database.put({ ...character, profileImgURLs: imageUrls, faceImgURLs: faceImgs })
   }
 
   return (
@@ -78,13 +94,26 @@ export function Character() {
         isEditing={isEditing}
         setIsEditing={setIsEditing}
       />
-      <h2 className="text-2xl text-bold">Generated Images</h2>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
+      <h2 className="text-2xl text-bold">Generate Images</h2>
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 m-2 px-4 rounded"
+        onClick={generateImagePrompt}
+      >
+        Generate Image Prompt
+      </button>
+      <p>{character?.imagePrompt}</p>
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 m-2 px-4 rounded"
         onClick={generateImages}
       >
         Generate Images
       </button>
-      {/* <CharacterImages id={id} /> */}
+      {character?.profileImgURLs?.map(url => (
+        <img src={url} alt="profile" />
+      ))}
+            {character?.faceImgURLs?.map(url => (
+        <img src={url} alt="profile" />
+      ))}
     </div>
   )
 }
