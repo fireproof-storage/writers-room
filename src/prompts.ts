@@ -1,12 +1,16 @@
 import OpenAI from 'openai'
 
 import { CharacterDoc } from './pages/Character'
+import { StorylineDoc } from './pages/Storyline'
+import { Database } from 'use-fireproof'
 
 class PromptsClient {
   private client: OpenAI
+  private database: Database
 
-  constructor(apiKey: string) {
+  constructor(apiKey: string, database: Database) {
     this.client = new OpenAI({ apiKey, dangerouslyAllowBrowser: true })
+    this.database = database
   }
 
   detailedCharacterVisualDescription = async (character: CharacterDoc) => {
@@ -71,14 +75,17 @@ ${character.name} is a ${character.visualDescription}
     if (!character.imagePrompt) {
       throw new Error('Character does not have aimagePrompt')
     }
-    const prompt = `In the flat-colored style of a modern comic book, render a full length sketch (including head) of: ${character.imagePrompt.substring(0, 900)}`
+    const prompt = `In the flat-colored style of a modern comic book, render a full length sketch (including head) of: ${character.imagePrompt.substring(
+      0,
+      900
+    )}`
     const response = await this.client.images.generate({
       prompt,
       n: 4,
-      size: "512x512",
+      size: '512x512'
     })
     console.log('image', response)
-    const image_urls = response.data.map((m) => m.url);
+    const image_urls = response.data.map(m => m.url)
     return image_urls
   }
 
@@ -86,20 +93,109 @@ ${character.name} is a ${character.visualDescription}
     if (!character.imagePrompt) {
       throw new Error('Character does not have aimagePrompt')
     }
-    const prompt = `In the flat-colored style of a modern comic book, render the face of: ${character.imagePrompt.substring(0, 900)}`
+    const prompt = `In the flat-colored style of a modern comic book, render the face of: ${character.imagePrompt.substring(
+      0,
+      900
+    )}`
     const response = await this.client.images.generate({
       prompt,
       n: 4,
-      size: "512x512",
+      size: '512x512'
     })
     console.log('image', response)
-    const image_urls = response.data.map((m) => m.url);
+    const image_urls = response.data.map(m => m.url)
     return image_urls
+  }
+
+  generateActsFromStoryline = async (storyline: StorylineDoc, numActs = 4) => {
+    const prompt = `Compose an act-level outline of the following storyline, formatted into ${numActs} acts.
+
+    Example Act Format:
+    Act I: [Act Title]
+    
+    [Scene Title 1]: Provide a brief description of what happens in this scene, introducing characters, events, or situations as relevant.
+    [Scene Title 2]: Provide a brief description of what happens in this scene.
+    [Scene Title 3]: Provide a brief description of what happens in this scene.
+
+    Each act can contain between 3 and 7 scenes, and the scenes should be titled to reflect key events or character developments. The description should provide enough detail to understand the key points of the scene. Repeat this structure for all ${numActs} acts.
+    
+    Create an act-level outline for the following storyline: ${storyline.description}`
+
+    const rawResponse = await this.client.chat.completions.create({
+      model: 'gpt-4',
+      messages: [
+        {
+          role: 'system',
+          content: `You will act as a writing assistant, following the suggested format.`
+        },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0,
+      max_tokens: 1024
+    })
+    console.log('gpt-4', rawResponse)
+
+    const response = rawResponse.choices[0].message.content!
+
+    for (let i = 0; i < numActs; i++) {
+      const actInfo = await this.parseActFromResponse(response, i+1)
+      actInfo.number = i+1
+      actInfo.storyline = storyline._id
+      actInfo.type = 'act'
+
+      console.log('actInfo', i+1, actInfo)
+      await this.database.put(actInfo)
+    }
+  }
+
+  parseActFromResponse = async (content: string, act: number) => {
+    const functions = [
+      {
+        name: 'save_act_and_scenes',
+        description: 'Save an act and its scenes to the database',
+        parameters: {
+          type: 'object',
+          properties: {
+            title: {
+              type: 'string',
+              description: 'The title of the act'
+            },
+            scenes: {
+              type: 'array',
+              items: {
+                type: 'string',
+                description: 'A brief description of the scene'
+              }
+            }
+          }
+        }
+      }
+    ]
+
+    const extractPrompt = `Call the save_act_and_scenes function by extracting the act-level outline for act ${act} from the following text: ${content}`
+
+    const response = await this.client.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: `You will extract the act-level outline for act ${act} from the response and save it to the database.`
+        },
+        { role: 'user', content: extractPrompt }
+      ],
+      functions,
+      temperature: 0,
+      max_tokens: 1024
+    })
+
+    console.log('gpt-3', response)
+
+    return JSON.parse(response.choices[0].message.function_call!.arguments)
   }
 }
 
-function client(apiKey: string) {
-  return new PromptsClient(apiKey)
+function client(apiKey: string, database: Database) {
+  return new PromptsClient(apiKey, database)
 }
 
 export { client }

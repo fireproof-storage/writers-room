@@ -4,8 +4,11 @@ import {
   // , useNavigate
 } from 'react-router-dom'
 import { useFireproof } from 'use-fireproof'
-import { Items } from '../components/Items'
+import { Acts } from '../components/Acts'
 import { InlineEditor } from '../components/InlineEditor'
+import { client } from '../prompts'
+
+const apiKey = localStorage.getItem('api-key')
 
 export type StorylineDoc = {
   _id?: string
@@ -17,15 +20,19 @@ export type StorylineDoc = {
 }
 
 export function Storyline() {
-  // const navigate = useNavigate() // Initialize useHistory hook
   const [isEditing, setIsEditing] = useState(false)
   const [isEditingTitle, setIsEditingTitle] = useState(false)
 
   const { database, useLiveQuery } = useFireproof('topics')
   const { id } = useParams()
 
-  const topics = useLiveQuery('_id', { key: id })
-  const [topic] = topics.docs as StorylineDoc[]
+  const storylines = useLiveQuery('_id', { key: id })
+  const [storyline] = storylines.docs as StorylineDoc[]
+
+  const generateActs = async () => {
+    if (!apiKey) throw new Error('No API key set')
+    await client(apiKey, database).generateActsFromStoryline(storyline)
+  }
 
   return (
     <div>
@@ -33,37 +40,41 @@ export function Storyline() {
         {isEditingTitle ? (
           <InlineEditor
             field="title"
-            document={topic}
+            document={storyline}
             database={database}
             isEditing={isEditingTitle}
             setIsEditing={setIsEditingTitle}
           />
         ) : (
           <h1 className="text-2xl font-bold" onClick={() => setIsEditingTitle(true)}>
-            {topic?.title}
+            {storyline?.title}
           </h1>
         )}
       </div>
       <div className="mb-2">
         <span className="text-sm text-gray-500">
-          Created: {new Date(topic?.created).toLocaleString()}
+          Created: {new Date(storyline?.created).toLocaleString()}
         </span>
         <span className="ml-4 text-sm text-gray-500">
-          Updated: {new Date(topic?.updated).toLocaleString()}
+          Updated: {new Date(storyline?.updated).toLocaleString()}
         </span>
       </div>
       <InlineEditor
         field="description"
         label="Edit Description: "
-        document={topic}
+        document={storyline}
         database={database}
         isEditing={isEditing}
         setIsEditing={setIsEditing}
       />
+      <button
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        onClick={generateActs}
+      >
+        Generate Acts
+      </button>
 
-
-
-      <Items storylineId={id!} />
+      <Acts storylineId={id!} />
     </div>
   )
 }

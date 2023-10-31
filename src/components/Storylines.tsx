@@ -7,9 +7,9 @@ import { AutoFocusInput } from './AutoFocusInput'
 export function Storylines() {
   const { database, useLiveQuery } = useFireproof('topics')
   const [isCreating, setIsCreating] = useState(false)
-  const [topicName, setTopicName] = useState('')
+  const [storylineName, setStorylineName] = useState('')
 
-  const topics = useLiveQuery(
+  const storylines = useLiveQuery(
     (doc, emit) => {
       if (doc.type === 'storyline') {
         emit(doc.title)
@@ -21,13 +21,13 @@ export function Storylines() {
   const handleCreateClick = async () => {
     const topicDoc: StorylineDoc = {
       type: 'storyline',
-      title: topicName,
+      title: storylineName,
       created: Date.now(),
       updated: Date.now()
     }
     await database.put(topicDoc)
     setIsCreating(false)
-    setTopicName('')
+    setStorylineName('')
   }
   return (
     <div className="py-2">
@@ -43,9 +43,9 @@ export function Storylines() {
               }}
             >
               <AutoFocusInput
-                value={topicName}
+                value={storylineName}
                 isActive={isCreating}
-                onChange={e => setTopicName(e.target.value)}
+                onChange={e => setStorylineName(e.target.value)}
                 className="bg-slate-300 p-1 mr-2 text-xs text-black flex-grow"
               />
               <button type="submit" className="ml-2">
@@ -61,7 +61,7 @@ export function Storylines() {
             </>
           )}
         </li>
-        {topics.map(doc => (
+        {storylines.map(doc => (
           <li key={doc._id} className="p-2 text-gray-500">
             <Link
               to={`/topic/${doc._id}`}

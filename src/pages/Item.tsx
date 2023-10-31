@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useFireproof } from 'use-fireproof'
-import { ItemDoc } from '../components/Items'
+import { ItemDoc } from '../components/Acts'
 import { StorylineDoc } from './Storyline'
 import { InlineEditor } from '../components/InlineEditor'
 
@@ -18,7 +18,7 @@ export function Item() {
     const fetchItem = async () => {
       const doc = (await database.get(id!)) as ItemDoc
       doc.topic = (await database.get(doc.storylineId as string)) as StorylineDoc
-      if (doc.type === 'item') {
+      if (doc.type === 'act') {
         setItem(doc)
       }
     }
