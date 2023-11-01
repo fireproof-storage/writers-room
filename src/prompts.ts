@@ -140,11 +140,26 @@ ${character.name} is a ${character.visualDescription}
     for (let i = 0; i < numActs; i++) {
       const actInfo = await this.parseActFromResponse(response, i+1)
       actInfo.number = i+1
-      actInfo.storyline = storyline._id
+      actInfo.storylineId = storyline._id
       actInfo.type = 'act'
 
+      const scenes = actInfo.scenes
+      delete actInfo.scenes
+
+
+
       console.log('actInfo', i+1, actInfo)
-      await this.database.put(actInfo)
+      const ok = await this.database.put(actInfo)
+
+      for (const scene of scenes) {
+        const sceneInfo = {
+          title: scene,
+          actId: ok.id,
+          type: 'scene'
+        }
+        console.log('sceneInfo', sceneInfo)
+        await this.database.put(sceneInfo)
+      }
     }
   }
 

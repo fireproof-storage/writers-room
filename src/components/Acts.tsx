@@ -3,20 +3,13 @@ import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { AutoFocusInput } from './AutoFocusInput'
 import { StorylineDoc } from '../pages/Storyline'
-
-export type ActDoc = {
-  _id?: string
-  storylineId: string
-  storyline?: StorylineDoc
-  name: string
-  description?: string
-  created: number
-  updated: number
-  type: 'act'
-}
+import { useParams } from 'react-router-dom'
+import { actsForStoryline, ActDoc } from '../fireproof'
 
 export function Acts({ storylineId }: { storylineId: string }) {
-  const { database, useLiveQuery } = useFireproof('topics')
+  const { world } = useParams()
+  const { database, useLiveQuery } = useFireproof(world)
+
   const [isCreating, setIsCreating] = useState(false)
   const [actName, setActName] = useState('')
 
@@ -34,16 +27,14 @@ export function Acts({ storylineId }: { storylineId: string }) {
     const actDoc: ActDoc = {
       type: 'act',
       storylineId,
-      name: actName,
-      created: Date.now(),
-      updated: Date.now()
+      title: actName
     }
     await database.put(actDoc)
     setIsCreating(false)
     setActName('')
   }
 
-  console.log({acts})
+  console.log('acts', acts)
 
   return (
     <div className="py-2">
@@ -55,6 +46,7 @@ export function Acts({ storylineId }: { storylineId: string }) {
               className="flex items-center"
               onSubmit={e => {
                 e.preventDefault()
+                
                 handleCreateClick()
               }}
             >
@@ -80,7 +72,7 @@ export function Acts({ storylineId }: { storylineId: string }) {
         {acts.map(doc => (
           <li key={doc._id} className="p-2 text-gray-500 flex justify-between items-center">
             <Link
-              to={`/item/${doc._id}`}
+              to={`/${world}/act/${doc._id}`}
               className="block hover:bg-gray-100 dark:hover:bg-gray-800 rounded px-2 flex-grow"
             >
               <span className="font-bold">{doc.title}</span>
