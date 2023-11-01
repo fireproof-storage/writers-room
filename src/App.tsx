@@ -5,8 +5,20 @@ import { Header } from './components/Header'
 import { Home } from './pages/Home'
 import { Storyline } from './pages/Storyline'
 import { Sidebar } from './components/Sidebar'
-import { Item } from './pages/Item'
+import { Item } from './pages/Act'
 import { Character } from './pages/Character'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+
+function RedirectToDefault() {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    navigate('/default')
+  }, [navigate])
+
+  return null
+}
 
 function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -19,10 +31,11 @@ function Layout({ children }: { children: React.ReactNode }) {
 
 function App() {
   const routes = [
-    { path: '/character/:id', component: Character },
-    { path: '/topic/:id', component: Storyline },
-    { path: '/item/:id', component: Item },
-    { path: '/', component: Home }
+    { path: '/:world/character/:id', component: Character },
+    { path: '/:world/storyline/:id', component: Storyline },
+    { path: '/:world/act/:id', component: Item },
+    { path: '/:world', component: Home },
+    { path: '/', component: RedirectToDefault }
   ]
 
   return (

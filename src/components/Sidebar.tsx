@@ -1,15 +1,18 @@
-import { useEffect, useState } from 'react'
+// import { useEffect, useState } from 'react'
 import { useFireproof } from 'use-fireproof'
+import { useParams } from 'react-router-dom'
+
 // import { connect } from '@fireproof/ipfs'
-import { Login } from './Login'
+// import { Login } from './Login'
 import { Storylines } from './Storylines'
 import { Characters } from './Characters'
 import { APIKey } from './APIKey'
 
 export function Sidebar() {
-  const { database } = useFireproof('topics')
+  const { world } = useParams()
+  const { database } = useFireproof(world)
 
-    window['database'] = database
+  window['database'] = database
 
   // const [authorized, setAuthorized] = useState(false)
   // const [userEmail, setUserEmail] = useState(localStorage.getItem('user-email') || '')
@@ -45,17 +48,11 @@ export function Sidebar() {
         placeholder={userEmail}
         authorized={authorized}
       /> */}
-      
-      <APIKey
-        onKeySet={onKeySet}
-        placeholder={placeholder}
-        keyPresent={apiKeyPresent}
-      />
+
+      <APIKey onKeySet={onKeySet} placeholder={placeholder} keyPresent={apiKeyPresent} />
 
       <Characters />
       <Storylines />
-      
-
     </div>
   )
 }

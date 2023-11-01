@@ -25,7 +25,9 @@ export function Character() {
   const [isEditing, setIsEditing] = useState(false)
   const [isEditingName, setIsEditingName] = useState(false)
 
-  const { database, useLiveQuery } = useFireproof('topics')
+  const { world } = useParams()
+  const { database, useLiveQuery } = useFireproof(world)
+
   const { id } = useParams()
 
   const characters = useLiveQuery('_id', { key: id }).docs as CharacterDoc[]

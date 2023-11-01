@@ -18,20 +18,20 @@ export function Home() {
       <p>
         Edit routes in <code>App.tsx</code>, this copy in <code>Home.tsx</code>, and the sidebar in{' '}
         <code>Sidebar.tsx</code>. This starter kit ships with a Login component (
-        <code>components/Login.tsx</code>) and Storylines (<code>components/Storylines.tsx</code>) with
-        Items (<code>components/Items.tsx</code>), which you can rename and use as a starting point
-        for your own app's data.
+        <code>components/Login.tsx</code>) and Storylines (<code>components/Storylines.tsx</code>)
+        with Items (<code>components/Items.tsx</code>), which you can rename and use as a starting
+        point for your own app's data.
       </p>
+      <p>Just a few ides for how to use this starter kit:</p>
+      <ul>
+        <li>
+          To create a <a href="https://public-media.fireproof.storage">photo gallery app.</a>
+        </li>
+        <li>As the basis for a blog.</li>
+        <li>To build a collaborative data-gathering app.</li>
+        <li>As a starting point for a todo app.</li>
+      </ul>
       <p>
-        Just a few ides for how to use this starter kit:
-        <ul>
-          <li>
-            To create a <a href="https://public-media.fireproof.storage">photo gallery app.</a>
-          </li>
-          <li>As the basis for a blog.</li>
-          <li>To build a collaborative data-gathering app.</li>
-          <li>As a starting point for a todo app.</li>
-        </ul>
         There are more ideas in the{' '}
         <a href="https://github.com/fireproof-storage/fireproof/discussions/6">
           Fireproof example apps discussions thread

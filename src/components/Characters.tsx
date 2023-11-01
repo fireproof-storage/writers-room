@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom'
 import { CharacterDoc } from '../pages/Character'
 import { useState } from 'react'
 import { AutoFocusInput } from './AutoFocusInput'
+import { useParams } from 'react-router-dom'
 
 export function Characters() {
-  const { database, useLiveQuery } = useFireproof('topics')
+  const { world } = useParams()
+  const { database, useLiveQuery } = useFireproof(world)
   const [isCreating, setIsCreating] = useState(false)
   const [characterName, setCharacterName] = useState('')
 
@@ -64,7 +66,7 @@ export function Characters() {
         {characters.map(doc => (
           <li key={doc._id} className="p-2 text-gray-500">
             <Link
-              to={`/character/${doc._id}`}
+              to={`/${world}/character/${doc._id}`}
               className="block text-xs hover:bg-gray-100 dark:hover:bg-gray-800 rounded p-2"
             >
               <span className="block font-bold">{doc.name}</span>
