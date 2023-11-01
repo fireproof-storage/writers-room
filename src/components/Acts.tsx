@@ -6,6 +6,8 @@ import { StorylineDoc } from '../pages/Storyline'
 import { useParams } from 'react-router-dom'
 import { actsForStoryline, ActDoc } from '../fireproof'
 
+console.log('actsFors', actsForStoryline)
+
 export function Acts({ storylineId }: { storylineId: string }) {
   const { world } = useParams()
   const { database, useLiveQuery } = useFireproof(world)
@@ -13,15 +15,7 @@ export function Acts({ storylineId }: { storylineId: string }) {
   const [isCreating, setIsCreating] = useState(false)
   const [actName, setActName] = useState('')
 
-  const acts = useLiveQuery(
-    (doc, emit) => {
-      if (doc.type === 'act' && doc.storyline) {
-        console.log('got one', doc.storyline, doc.number)
-        emit([doc.storyline, doc.number])
-      }
-    },
-    { descending: false }
-  ).docs as ActDoc[]
+  const acts = useLiveQuery(actsForStoryline, { descending: false }).docs as ActDoc[]
 
   const handleCreateClick = async () => {
     const actDoc: ActDoc = {
@@ -46,7 +40,7 @@ export function Acts({ storylineId }: { storylineId: string }) {
               className="flex items-center"
               onSubmit={e => {
                 e.preventDefault()
-                
+
                 handleCreateClick()
               }}
             >

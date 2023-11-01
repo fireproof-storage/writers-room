@@ -7,10 +7,10 @@ export type ActDoc = {
   type: 'act'
 }
 
-
-export function actsForStoryline(doc, emit) {
+export const actsForStoryline = (doc: ActDoc, emit: (key: unknown[]) => void) => {
   if (doc.type === 'act' && doc.storylineId) {
     console.log('actsForStoryline', doc, [doc.storylineId, doc.number])
     emit([doc.storylineId, doc.number])
   }
 }
+
