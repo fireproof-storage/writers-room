@@ -1,6 +1,6 @@
 import { useFireproof } from 'use-fireproof'
 import { Link } from 'react-router-dom'
-import { StorylineDoc } from '../pages/Storyline'
+import { StorylineDoc } from '../fireproof'
 import { useState } from 'react'
 import { AutoFocusInput } from './AutoFocusInput'
 import { useParams } from 'react-router-dom'

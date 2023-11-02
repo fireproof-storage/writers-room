@@ -5,8 +5,9 @@ import { Header } from './components/Header'
 import { Home } from './pages/Home'
 import { Storyline } from './pages/Storyline'
 import { Sidebar } from './components/Sidebar'
-import { Item } from './pages/Act'
+import { Act } from './pages/Act'
 import { Character } from './pages/Character'
+import { Scene } from './pages/Scene'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -33,7 +34,8 @@ function App() {
   const routes = [
     { path: '/:world/character/:id', component: Character },
     { path: '/:world/storyline/:id', component: Storyline },
-    { path: '/:world/act/:id', component: Item },
+    { path: '/:world/act/:id', component: Act },
+    { path: '/:world/scene/:id', component: Scene },
     { path: '/:world', component: Home },
     { path: '/', component: RedirectToDefault }
   ]

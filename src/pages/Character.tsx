@@ -35,15 +35,15 @@ export function Character() {
 
   const generateImagePrompt = async () => {
     if (!apiKey) throw new Error('No API key set')
-    const imagePrompt = await client(apiKey).detailedCharacterVisualDescription(character)
+    const imagePrompt = await client(apiKey, database).detailedCharacterVisualDescription(character)
     await database.put({ ...character, imagePrompt })
   }
 
   const generateImages = async () => {
     if (!apiKey) throw new Error('No API key set')
-    const imageUrls = (await client(apiKey).generateProfileImage(character)) as string[]
+    const imageUrls = (await client(apiKey, database).generateProfileImage(character)) as string[]
     console.log(imageUrls)
-    const faceImgs = (await client(apiKey).generateFaceImages(character)) as string[]
+    const faceImgs = (await client(apiKey, database).generateFaceImages(character)) as string[]
     await database.put({ ...character, profileImgURLs: imageUrls, faceImgURLs: faceImgs })
   }
 

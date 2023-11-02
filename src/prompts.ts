@@ -1,7 +1,7 @@
 import OpenAI from 'openai'
 
 import { CharacterDoc } from './pages/Character'
-import { StorylineDoc } from './pages/Storyline'
+import { SceneDoc, StorylineDoc } from './fireproof'
 import { Database } from 'use-fireproof'
 
 class PromptsClient {
@@ -138,24 +138,28 @@ ${character.name} is a ${character.visualDescription}
     const response = rawResponse.choices[0].message.content!
 
     for (let i = 0; i < numActs; i++) {
-      const actInfo = await this.parseActFromResponse(response, i+1)
-      actInfo.number = i+1
+      const actInfo = await this.parseActFromResponse(response, i + 1)
+      actInfo.number = i + 1
       actInfo.storylineId = storyline._id
       actInfo.type = 'act'
 
       const scenes = actInfo.scenes
+
+      console.log('scenes', scenes)
+
       delete actInfo.scenes
 
-
-
-      console.log('actInfo', i+1, actInfo)
+      console.log('actInfo', i + 1, actInfo)
       const ok = await this.database.put(actInfo)
-
+      let pos = 0
       for (const scene of scenes) {
-        const sceneInfo = {
+        const sceneInfo : SceneDoc = {
           title: scene,
           actId: ok.id,
-          type: 'scene'
+          type: 'scene',
+          updated: Date.now(),
+          created: Date.now(),
+          position: pos++
         }
         console.log('sceneInfo', sceneInfo)
         await this.database.put(sceneInfo)
@@ -187,7 +191,7 @@ ${character.name} is a ${character.visualDescription}
       }
     ]
 
-    const extractPrompt = `Call the save_act_and_scenes function by extracting the act-level outline for act ${act} from the following text: ${content}`
+    const extractPrompt = `Call the save_act_and_scenes function by extracting the act-level outline for act ${act} from the following text. Remove any reference to position from the act and scene titles, eg "Act III: The Happening" should be transformed to "The Happening" or "Scene 1: The Event: Foo bar..." should become "The Event: Foo bar...": ${content}`
 
     const response = await this.client.chat.completions.create({
       model: 'gpt-3.5-turbo',

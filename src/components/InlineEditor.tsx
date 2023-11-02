@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import type { Database, DocFragment } from 'use-fireproof'
+import type { Database, Doc } from 'use-fireproof'
 
 type InlineEditorProps = {
-  document: { [key: string]: DocFragment; updated: number }
+  document: Doc & { updated: number }
   database: Database
   isEditing: boolean
   setIsEditing: (value: boolean) => void

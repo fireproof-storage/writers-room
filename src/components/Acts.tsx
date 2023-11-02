@@ -2,11 +2,10 @@ import { useFireproof } from 'use-fireproof'
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { AutoFocusInput } from './AutoFocusInput'
-import { StorylineDoc } from '../pages/Storyline'
+// import { StorylineDoc } from '../fireproof'
 import { useParams } from 'react-router-dom'
 import { actsForStoryline, ActDoc } from '../fireproof'
-
-console.log('actsFors', actsForStoryline)
+import { MapFn } from '@fireproof/core'
 
 export function Acts({ storylineId }: { storylineId: string }) {
   const { world } = useParams()
@@ -15,13 +14,17 @@ export function Acts({ storylineId }: { storylineId: string }) {
   const [isCreating, setIsCreating] = useState(false)
   const [actName, setActName] = useState('')
 
-  const acts = useLiveQuery(actsForStoryline, { descending: false }).docs as ActDoc[]
+  const acts = useLiveQuery(actsForStoryline as MapFn, { key: storylineId, descending: false })
+    .docs as ActDoc[]
 
   const handleCreateClick = async () => {
     const actDoc: ActDoc = {
       type: 'act',
       storylineId,
-      title: actName
+      title: actName,
+      number: acts.length + 1,
+      updated: Date.now(),
+      created: Date.now()
     }
     await database.put(actDoc)
     setIsCreating(false)
