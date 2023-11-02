@@ -191,7 +191,7 @@ ${character.name} is a ${character.visualDescription}
       }
     ]
 
-    const extractPrompt = `Call the save_act_and_scenes function by extracting the act-level outline for act ${act} from the following text. Remove any reference to position from the act and scene titles, eg "Act III: The Happening" should be transformed to "The Happening" or "Scene 1: The Event: Foo bar..." should become "The Event: Foo bar...": ${content}`
+    const extractPrompt = `Call the save_act_and_scenes function by extracting the act-level outline for act ${act} from the following text. Remove any reference to position from the act and scene descriptions, eg "Act III: The Happening" should be transformed to "The Happening" or "Scene 1: The Event: Foo bar..." should become "The Event: Foo bar...": ${content}`
 
     const response = await this.client.chat.completions.create({
       model: 'gpt-3.5-turbo',
