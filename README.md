@@ -2,6 +2,9 @@
 
 Unleash Your Inner Storyteller with Graphic Novel Builder!
 
+<img width="1237" alt="Screen Shot 2023-11-03 at 1 47 49 PM" src="https://github.com/fireproof-storage/writers-room/assets/253/0fcd0fa9-21fb-495b-9690-39755f707a40">
+
+
 Create Your Unique Style
 
 Choose from a variety of art styles that transform your novel's look.
