@@ -1,9 +1,16 @@
-import { CallbackFn } from '@fireproof/core'
+import { CallbackFn, MapFn } from '@fireproof/core'
 
 type StoryDoc = {
-  _id? : string
+  _id?: string
   updated: number
   created: number
+}
+
+export type StorylineDoc = StoryDoc & {
+  _id?: string
+  title: string
+  description?: string
+  type: 'storyline'
 }
 
 export type ActDoc = StoryDoc & {
@@ -20,13 +27,6 @@ export const actsForStoryline = (doc: ActDoc, emit: CallbackFn) => {
   }
 }
 
-export type StorylineDoc = StoryDoc & {
-  _id?: string
-  title: string
-  description?: string
-  type: 'storyline'
-}
-
 export type SceneDoc = StoryDoc & {
   title: string
   actId: string
@@ -40,3 +40,22 @@ export const scenesForAct = (doc: SceneDoc, emit: CallbackFn) => {
     emit(doc.actId!)
   }
 }
+
+export type PanelDoc = StoryDoc & {
+  type: 'panel'
+  position: number
+  sceneId: string
+  narrative: string
+  visual: string
+  caption: string
+  imageUrls: string[]
+}
+
+const pfs = (doc: PanelDoc, emit: CallbackFn) => {
+  if (doc.type === 'panel' && doc.sceneId) {
+    // emit([doc.sceneId, doc.position])
+    emit(doc.sceneId!)
+  }
+}
+
+export const panelsForScene = pfs as unknown as MapFn

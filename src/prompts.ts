@@ -1,7 +1,7 @@
 import OpenAI from 'openai'
 
 import { CharacterDoc } from './pages/Character'
-import { SceneDoc, StorylineDoc } from './fireproof'
+import { SceneDoc, StorylineDoc, ActDoc, PanelDoc } from './fireproof'
 import { Database } from 'use-fireproof'
 
 class PromptsClient {
@@ -153,7 +153,7 @@ ${character.name} is a ${character.visualDescription}
       const ok = await this.database.put(actInfo)
       let pos = 0
       for (const scene of scenes) {
-        const sceneInfo : SceneDoc = {
+        const sceneInfo: SceneDoc = {
           title: scene,
           actId: ok.id,
           type: 'scene',
@@ -210,6 +210,206 @@ ${character.name} is a ${character.visualDescription}
     console.log('gpt-3', response)
 
     return JSON.parse(response.choices[0].message.function_call!.arguments)
+  }
+
+  generatePanelsFromScene = async (
+    storyline: StorylineDoc,
+    act: ActDoc,
+    scene: SceneDoc,
+    max: number = 20
+  ) => {
+    const prompt = `
+      Generate ${Math.floor(
+        max / 2
+      )} to ${max} storyboard panels for the following scene, which will be formatted into a comic book page. Each panel should have a narrative description, a visual prompt, and a caption, each one sentence long.
+
+      Storyline: ${storyline.description}
+
+      Act ${act.number}: ${act.title}
+
+      Scene: ${scene.title}
+
+      Generate ${Math.floor(max / 2)} to ${max} panels in outline format
+    `
+    console.log('prompt', prompt)
+
+    const rawResponse = await this.client.chat.completions.create({
+      model: 'gpt-4',
+      messages: [
+        {
+          role: 'system',
+          content: `You will act as a writing assistant, following the suggested format.`
+        },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0,
+      max_tokens: 1024
+    })
+    console.log('gpt-4', rawResponse)
+
+    const response = rawResponse.choices[0].message.content!
+    console.log('response', response)
+    const { panels } = await this.parsePanelsFromResponse(response)
+    let pos = 0
+    for (const panel of panels) {
+      panel.type = 'panel'
+      panel.sceneId = scene._id!
+      panel.created = Date.now()
+      panel.updated = Date.now()
+      panel.position = pos++
+      console.log('panel', panel)
+      await this.database.put(panel)
+    }
+  }
+
+  parsePanelsFromResponse = async (content: string) => {
+    const countFunctions = [
+      {
+        name: 'count_panels',
+        description: `Report the total number of panels described in the provided text`,
+        parameters: {
+          type: 'object',
+          properties: {
+            count: {
+              type: 'number',
+              description: 'The total number of panels described'
+            }
+          }
+        }
+      }
+    ]
+
+    const countPrompt = `Call the count_panels function with the total number of panels: ${content}`
+
+    console.log('extractPrompt', countPrompt, countFunctions)
+
+    const countResponse = await this.client.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: `You will extract the panel-level outline from the response and save it to the database.`
+        },
+        { role: 'user', content: countPrompt }
+      ],
+      functions: countFunctions,
+      temperature: 0,
+      max_tokens: 1024
+    })
+
+    console.log('gpt-3', countResponse)
+
+    const { count } = JSON.parse(countResponse.choices[0].message.function_call!.arguments)
+
+    console.log('stuff', count)
+
+    const functions = [
+      {
+        name: 'save_panel',
+        description: `Save a panel to the database`,
+        parameters: {
+          type: 'object',
+          properties: {
+            narrative: {
+              type: 'string',
+              description: 'A brief description of the panel'
+            },
+            visual: {
+              type: 'string',
+              description: 'A visual prompt for the panel'
+            },
+            caption: {
+              type: 'string',
+              description: 'A caption for the panel'
+            }
+          }
+        }
+      }
+    ]
+    const panels = []
+    for (let i = 0; i < count; i++) {
+      const extractPrompt = `Call the save_panel function to extracting the panel-level outline from the following text for panel number ${
+        i + 1
+      }. Remove any reference to position from the panel descriptions, eg "Panel 4: The Happening" should be transformed to "The Happening" etc. Here is the content to parse: ${content}`
+
+      console.log('extractPrompt', extractPrompt, functions)
+
+      const response = await this.client.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          {
+            role: 'system',
+            content: `You will extract the panel from the response and save it to the database.`
+          },
+          { role: 'user', content: extractPrompt }
+        ],
+        functions,
+        temperature: 0,
+        max_tokens: 1024
+      })
+
+      console.log('gpt-3', response)
+
+      const panelData = JSON.parse(response.choices[0].message.function_call!.arguments)
+      console.log('panelData', panelData)
+      panels.push(panelData)
+    }
+    return { panels }
+  }
+
+  generatePanelImages = async (
+    storyline: StorylineDoc,
+    act: ActDoc,
+    scene: SceneDoc,
+    panels: PanelDoc[]
+  ) => {
+    let pos = 0
+    for (const panel of panels) {
+      const prompt = `In the flat-colored style of a modern comic book, render a panel for the following scene. The most important part of the prompt is labeled "Visual" below. The narrative and caption are provided for context. Don't include dialog, speech bubbles, or labels in the image. Zoom in closely on the action in the visual prompt.
+
+      Visual: ${panel.visual}
+      
+      Storyline: ${storyline.description}
+    
+      Act: ${act.title}
+
+      Scene: ${scene.title}
+
+      Panel: ${pos++}
+
+      Narrative: ${panel.narrative}
+
+      Caption: ${panel.caption}
+      
+      Visual: ${panel.visual}
+      
+      Reply with a short, detailed prompt to send DALLe2.`
+
+      const rawResponse = await this.client.chat.completions.create({
+        model: 'gpt-4',
+        messages: [
+          {
+            role: 'system',
+            content: `You will act as an art assistant, create an image generation prompt.`
+          },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0,
+        max_tokens: 1024
+      })
+
+      console.log('gpt-4', rawResponse)
+      const imagePrompt = rawResponse.choices[0].message.content!
+
+      const response = await this.client.images.generate({
+        prompt: imagePrompt,
+        n: 4,
+        size: '512x512'
+      })
+      console.log('image', response)
+      panel.imageUrls = response.data.map(m => m.url!)
+      await this.database.put(panel)
+    }
   }
 }
 

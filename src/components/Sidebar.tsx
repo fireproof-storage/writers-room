@@ -12,6 +12,8 @@ export function Sidebar() {
   const { world } = useParams()
   const { database } = useFireproof(world)
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   window['database'] = database
 
   // const [authorized, setAuthorized] = useState(false)
