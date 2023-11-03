@@ -50,6 +50,8 @@ export function Scene() {
     await client(apiKey, database).generatePanelImages(storyline, act, scene, panels)
   }
 
+  console.log('panels', panels)
+
   return (
     <div className="">
       <p>{scene.title}</p>
@@ -92,15 +94,43 @@ const PanelList = ({ generate, panels }: { panels: PanelDoc[]; generate: () => v
           <p>
             <strong className="font-bold">Caption:</strong> {panel.caption}
           </p>
-          <div className="grid grid-cols-4 gap-4">
-            {panel.imageUrls?.map(url => (
-              <div key={url}>
-                <img src={url} alt={panel.narrative} />
-              </div>
-            ))}
-          </div>
+          <FileSection doc={panel} />
         </li>
       ))}
     </ul>
   </>
 )
+
+function FileSection({ doc }: { doc: PanelDoc }) {
+  if (doc._files) {
+    const fileLIs = Object.entries(doc._files).map(([key, meta]) => (
+      <li key={key} className="py-2 mr-2">
+        <ImgFile meta={meta as DocFileMeta} />
+      </li>
+    ))
+    return <ul className="inline-grid grid-cols-4">{fileLIs}</ul>
+  }
+  return <></>
+}
+
+function ImgFile({ meta }: { meta: DocFileMeta; cache?: boolean }) {
+  const [imgDataUrl, setImgDataUrl] = useState('')
+
+  useEffect(() => {
+    if (meta.file && /image/.test(meta.type)) {
+      meta.file().then(file => {
+        const src = URL.createObjectURL(file)
+        setImgDataUrl(src)
+        return () => {
+          URL.revokeObjectURL(src)
+        }
+      })
+    }
+  }, [meta])
+
+  if (imgDataUrl) {
+    return <img alt="db-image" src={imgDataUrl}  />
+  } else {
+    return <></>
+  }
+}

@@ -216,7 +216,7 @@ ${character.name} is a ${character.visualDescription}
     storyline: StorylineDoc,
     act: ActDoc,
     scene: SceneDoc,
-    max: number = 20
+    max: number = 10
   ) => {
     const prompt = `
       Generate ${Math.floor(
@@ -327,10 +327,10 @@ ${character.name} is a ${character.visualDescription}
       }
     ]
     const panels = []
-    for (let i = 0; i < count; i++) {
+    for (let i = 1; i <= count; i++) {
       const extractPrompt = `Call the save_panel function to extracting the panel-level outline from the following text for panel number ${
-        i + 1
-      }. Remove any reference to position from the panel descriptions, eg "Panel 4: The Happening" should be transformed to "The Happening" etc. Here is the content to parse: ${content}`
+        i 
+      } of ${count}. Remove any reference to position from the panel descriptions, eg "Panel 4: The Happening" should be transformed to "The Happening" etc. Here is the content to parse: ${content}`
 
       console.log('extractPrompt', extractPrompt, functions)
 
@@ -404,13 +404,42 @@ ${character.name} is a ${character.visualDescription}
       const response = await this.client.images.generate({
         prompt: imagePrompt,
         n: 4,
-        size: '512x512'
+        size: '512x512',
+        response_format: 'b64_json'
       })
       console.log('image', response)
-      panel.imageUrls = response.data.map(m => m.url!)
+
+      const imageFiles = await Promise.all(
+        response.data.map(async (m, index) => {
+          const base64Data = m.b64_json!
+          const byteCharacters = atob(base64Data)
+          const byteNumbers = new Array(byteCharacters.length)
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i)
+          }
+          const byteArray = new Uint8Array(byteNumbers)
+          const file = new File([byteArray], `image${index}.png`, { type: 'image/png' })
+          return file
+        })
+      )
+
+      console.log('imageFiles', imageFiles)
+      const files = {}
+      for (const [index, file] of imageFiles.entries()) {
+        files[`image${index}`] = file
+      }
+      panel._files = files
+
+      // panel.imageUrls = response.data.map(m => m.url!)
       await this.database.put(panel)
     }
   }
+}
+
+async function urlToFile(url, filename, mimeType) {
+  const response = await fetch(url)
+  const data = await response.blob()
+  return new File([data], filename, { type: mimeType })
 }
 
 function client(apiKey: string, database: Database) {
